@@ -1,0 +1,120 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#10121b">
+  <title>PuzzleLab — Think in patterns.</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div class="app-shell">
+    <aside class="sidebar">
+      <a class="brand" href="#" aria-label="PuzzleLab home">
+        <span class="brand-mark">P<span>+</span></span>
+        <span><strong>PuzzleLab</strong><small>THINK IN PATTERNS</small></span>
+      </a>
+      <div class="side-label">WORKSPACE</div>
+      <button class="nav-item active" data-view="sudoku"><span class="nav-icon">▦</span> Sudoku Studio <span class="nav-dot"></span></button>
+      <button class="nav-item" data-view="lab"><span class="nav-icon">⌘</span> Algorithm Lab</button>
+      <button class="nav-item" data-view="challenge"><span class="nav-icon">✳</span> Daily Challenge</button>
+      <div class="sidebar-bottom">
+        <div class="mini-card">
+          <span class="mini-icon">✦</span>
+          <strong>Curiosity mode</strong>
+          <p>Every wrong turn teaches the solver something.</p>
+        </div>
+        <div class="profile-chip"><div class="avatar">PL</div><div><strong>Puzzle explorer</strong><small>Practice makes patterns</small></div></div>
+      </div>
+    </aside>
+
+    <main class="main">
+      <header class="topbar">
+        <div class="breadcrumbs"><span>Workspace</span><span class="crumb-sep">/</span><strong id="crumb-title">Sudoku Studio</strong></div>
+        <div class="top-actions"><span class="status-pill"><i></i> LOCAL MODE</span><button id="theme-toggle" class="icon-button" aria-label="Toggle theme" title="Toggle theme">◐</button></div>
+      </header>
+
+      <section class="view active" id="view-sudoku">
+        <div class="hero">
+          <div><div class="eyebrow"><span class="spark">✦</span> YOUR LOGIC PLAYGROUND</div>
+            <h1>Think in patterns.<br><em>Solve with purpose.</em></h1>
+            <p class="hero-copy">A little space to slow down, spot the pattern, and understand the algorithm behind every move.</p>
+          </div>
+          <div class="hero-orbit" aria-hidden="true"><div class="orbit orbit-a"></div><div class="orbit orbit-b"></div><div class="orbit orbit-c"></div><div class="orbit-core">9<span>×</span>9</div><i class="star star-a">✦</i><i class="star star-b">✧</i><i class="star star-c">·</i></div>
+        </div>
+
+        <div class="stats-row">
+          <div class="stat-card"><span class="stat-icon purple">▦</span><div><small>PUZZLE</small><strong id="stat-difficulty">Easy</strong></div></div>
+          <div class="stat-card"><span class="stat-icon mint">◷</span><div><small>TIME ELAPSED</small><strong id="timer">00:00</strong></div></div>
+          <div class="stat-card"><span class="stat-icon amber">↗</span><div><small>CELLS FILLED</small><strong id="filled-count">30 / 81</strong></div></div>
+          <div class="stat-card"><span class="stat-icon blue">⌘</span><div><small>BACKTRACKS</small><strong id="stat-backtracks">0</strong></div></div>
+        </div>
+
+        <div class="workspace-grid">
+          <section class="panel board-panel">
+            <div class="panel-heading"><div><span class="section-kicker">01 / PLAY</span><h2>Sudoku board</h2></div><span class="live-tag"><i></i> INTERACTIVE</span></div>
+            <div class="board-toolbar"><label class="select-wrap">Difficulty <select id="difficulty"><option value="easy">Easy</option><option value="medium">Medium</option><option value="hard">Hard</option></select></label><button class="text-button" id="new-puzzle">↻ New puzzle</button></div>
+            <div id="sudoku-board" class="sudoku-board" role="grid" aria-label="Sudoku puzzle board"></div>
+            <div class="number-pad" id="number-pad" aria-label="Number pad"></div>
+            <div class="board-actions"><button class="button button-quiet" id="erase">Erase</button><button class="button button-quiet" id="check">Check board</button><button class="button button-primary" id="solve">Solve puzzle <span>↗</span></button></div>
+            <p class="board-hint" id="board-message" aria-live="polite">Select a cell, then choose a number. Given numbers are locked.</p>
+          </section>
+
+          <section class="panel explain-panel">
+            <div class="panel-heading"><div><span class="section-kicker">02 / UNDER THE HOOD</span><h2>Solver's notebook</h2></div><span class="pill">BACKTRACKING</span></div>
+            <p class="muted intro-small">Follow the solver's reasoning one move at a time.</p>
+            <div class="algorithm-flow">
+              <div class="flow-step active" id="flow-find"><span class="flow-number">01</span><div><strong>Find an empty cell</strong><small>Look for the next unfilled position.</small></div><span class="flow-check">●</span></div>
+              <div class="flow-line"></div>
+              <div class="flow-step" id="flow-try"><span class="flow-number">02</span><div><strong>Try a candidate</strong><small>Test a number from 1 to 9.</small></div><span class="flow-check">○</span></div>
+              <div class="flow-line"></div>
+              <div class="flow-step" id="flow-check"><span class="flow-number">03</span><div><strong>Check constraints</strong><small>Row, column, and 3×3 box.</small></div><span class="flow-check">○</span></div>
+              <div class="flow-line"></div>
+              <div class="flow-step" id="flow-back"><span class="flow-number">04</span><div><strong>Backtrack if needed</strong><small>Undo a choice that leads nowhere.</small></div><span class="flow-check">○</span></div>
+            </div>
+            <div class="reason-box"><div class="reason-head"><span>✦ CURRENT REASONING</span><span id="reason-step">READY</span></div><p id="reason-text">Press <b>Step through</b> to watch the solver make a decision. Each step reveals one part of the search process.</p></div>
+            <div class="solver-controls"><button class="button button-primary full" id="step-solve">▷ Step through</button><button class="button button-quiet full" id="reset-solver">Reset solver</button></div>
+            <div class="metrics"><div><span>Search attempts</span><strong id="attempts">0</strong></div><div><span>Backtracks</span><strong id="backtracks">0</strong></div><div><span>Steps replayed</span><strong id="steps-count">0</strong></div></div>
+          </section>
+        </div>
+        <section class="panel recent-panel"><div class="panel-heading"><div><span class="section-kicker">03 / YOUR PROGRESS</span><h2>Session notes</h2></div><span class="muted tiny">This session only</span></div><div id="session-notes" class="session-notes"><div class="empty-note"><span>✧</span><div><strong>No moves logged yet</strong><p>Try a number or start the solver to build your session history.</p></div></div></div></section>
+      </section>
+
+      <section class="view" id="view-lab">
+        <div class="page-heading"><div class="eyebrow">EXPERIMENT / UNDERSTAND</div><h1>Algorithm <em>Lab.</em></h1><p>See how a simple set of rules can solve a complex-looking puzzle.</p></div>
+        <div class="lab-grid">
+          <article class="panel lab-card"><div class="lab-icon purple">⌘</div><h2>Backtracking</h2><p>Build a solution one choice at a time. When a choice makes the puzzle impossible, undo it and explore another path.</p><div class="tag-row"><span>Recursion</span><span>Depth-first search</span><span>Constraints</span></div></article>
+          <article class="panel lab-card"><div class="lab-icon mint">✓</div><h2>Constraint checking</h2><p>Every candidate must respect three constraints: its row, its column, and its 3×3 subgrid. This prunes invalid choices early.</p><div class="tag-row"><span>Rows</span><span>Columns</span><span>3×3 boxes</span></div></article>
+          <article class="panel lab-card"><div class="lab-icon amber">↗</div><h2>Measure the search</h2><p>Search attempts count candidate checks. Backtracks count failed paths that force the algorithm to undo a placement.</p><div class="tag-row"><span>Attempts</span><span>Backtracks</span><span>Runtime</span></div></article>
+        </div>
+        <section class="panel code-panel"><div class="panel-heading"><div><span class="section-kicker">PSEUDOCODE</span><h2>The core idea</h2></div><span class="pill">LANGUAGE-AGNOSTIC</span></div>
+          <pre><code><span class="code-muted">solve(board):</span>
+  cell = find_empty_cell(board)
+  <span class="code-keyword">if</span> cell does not exist:
+    <span class="code-keyword">return</span> success
+
+  <span class="code-keyword">for</span> number <span class="code-keyword">in</span> 1..9:
+    <span class="code-keyword">if</span> number is valid at cell:
+      place number at cell
+      <span class="code-keyword">if</span> solve(board):
+        <span class="code-keyword">return</span> success
+      remove number from cell  <span class="code-muted">← backtrack</span>
+
+  <span class="code-keyword">return</span> failure</code></pre>
+          <p class="muted code-note">This is illustrative pseudocode. The working Sudoku solver is implemented in JavaScript in <code>app.js</code>.</p>
+        </section>
+        <section class="panel benchmark-panel"><div class="panel-heading"><div><span class="section-kicker">TRY IT</span><h2>Run a benchmark</h2></div></div><p class="muted">Choose a puzzle and run the solver to record actual candidate attempts and backtracks for this implementation. Results depend on the puzzle and search order.</p><button class="button button-primary" id="run-benchmark">Run current puzzle ↗</button><div id="benchmark-result" class="benchmark-result">No benchmark run yet.</div></section>
+      </section>
+
+      <section class="view" id="view-challenge">
+        <div class="page-heading"><div class="eyebrow">A SMALL DAILY RITUAL</div><h1>Daily <em>Challenge.</em></h1><p>One puzzle. A little patience. A clearer mind.</p></div>
+        <section class="panel challenge-card"><div class="challenge-date"><span class="challenge-symbol">✳</span><div><span class="section-kicker">TODAY'S PRACTICE</span><h2 id="challenge-date">Daily logic session</h2><p class="muted">A fresh start for your problem-solving muscles.</p></div></div><div class="challenge-stats"><div><small>FOCUS</small><strong>10–15 min</strong></div><div><small>SKILL</small><strong>Constraint logic</strong></div><div><small>GOAL</small><strong>Finish the grid</strong></div></div><p class="challenge-copy">Today's challenge uses the same Sudoku engine as the studio. Solve it yourself, check your board, or open the solver notebook when you want to understand the algorithm.</p><button class="button button-primary" id="start-challenge">Start today's puzzle ↗</button><p class="tiny muted">Prototype note: the daily puzzle is selected deterministically from the date and is not an online leaderboard or account-based streak.</p></section>
+      </section>
+
+      <footer class="footer"><span>PUZZLELAB <span class="footer-dot">✦</span> BUILT FOR THE CURIOUS</span><span>Keep asking why.</span></footer>
+    </main>
+  </div>
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+  <script src="app.js"></script>
+</body>
+</html>
